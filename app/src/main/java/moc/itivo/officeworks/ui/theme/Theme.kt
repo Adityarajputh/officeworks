@@ -13,6 +13,12 @@ private val LightColors = lightColorScheme(
     tertiary = Accent,
     background = SurfaceLight,
     surface = SurfaceLight,
+    surfaceVariant = NeutralVariantLight,
+    surfaceContainerLowest = ContainerLowestLight,
+    surfaceContainerLow = ContainerLowLight,
+    surfaceContainer = ContainerLight,
+    surfaceContainerHigh = ContainerHighLight,
+    surfaceContainerHighest = ContainerHighestLight,
 )
 
 private val DarkColors = darkColorScheme(
@@ -22,6 +28,12 @@ private val DarkColors = darkColorScheme(
     tertiary = AccentLight,
     background = SurfaceDark,
     surface = SurfaceDark,
+    surfaceVariant = NeutralVariantDark,
+    surfaceContainerLowest = ContainerLowestDark,
+    surfaceContainerLow = ContainerLowDark,
+    surfaceContainer = ContainerDark,
+    surfaceContainerHigh = ContainerHighDark,
+    surfaceContainerHighest = ContainerHighestDark,
 )
 
 /**

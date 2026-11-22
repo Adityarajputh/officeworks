@@ -24,7 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -51,13 +51,13 @@ fun EnquiryRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+    val resources = LocalResources.current
 
-    LaunchedEffect(viewModel) {
+    LaunchedEffect(viewModel, resources) {
         viewModel.effects.collect { effect ->
             when (effect) {
                 is EnquiryEffect.SubmitFailed ->
-                    snackbarHostState.showSnackbar(context.getString(effect.error.messageRes()))
+                    snackbarHostState.showSnackbar(resources.getString(effect.error.messageRes()))
             }
         }
     }
