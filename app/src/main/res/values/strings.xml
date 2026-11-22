@@ -1,3 +1,56 @@
 <resources>
-    <string name="app_name">officeworks</string>
+    <string name="app_name">Product Catalogue</string>
+
+    <!-- Common -->
+    <string name="action_back">Back</string>
+    <string name="action_retry">Try again</string>
+    <string name="error_network">Can\'t reach the catalogue. Check your connection and try again.</string>
+    <string name="error_not_found">We couldn\'t find that.</string>
+    <string name="error_server">The catalogue is having trouble right now. Please try again shortly.</string>
+    <string name="error_unexpected">Something went wrong. Please try again.</string>
+
+    <!-- Search -->
+    <string name="search_label">Search products</string>
+    <string name="search_action">Search</string>
+    <string name="search_title">Search</string>
+    <string name="search_no_results">No products match \"%1$s\".</string>
+    <string name="search_prompt">Type what you\'re looking for, then tap Search.</string>
+
+    <!-- Home -->
+    <string name="home_featured_title">Top rated</string>
+    <string name="home_categories_title">Shop by category</string>
+
+    <!-- Category -->
+    <string name="category_top_rated_title">Top rated in %1$s</string>
+    <string name="category_more_title">More in %1$s</string>
+    <string name="category_empty">There are no products in this category yet.</string>
+
+    <!-- Product -->
+    <string name="product_title">Product details</string>
+    <string name="product_brand">by %1$s</string>
+    <string name="product_rating">Rated %1$s out of 5</string>
+    <string name="product_enquire">Enquire</string>
+    <string name="product_image_description">Image %1$d of %2$s</string>
+
+    <!-- Enquiry -->
+    <string name="enquiry_title">Enquire</string>
+    <string name="enquiry_about">About: %1$s</string>
+    <string name="enquiry_intro">Leave your details and our sales team will get back to you.</string>
+    <string name="enquiry_name">Name *</string>
+    <string name="enquiry_email">Email *</string>
+    <string name="enquiry_phone">Phone (optional)</string>
+    <string name="enquiry_message">Message (optional)</string>
+    <string name="enquiry_required_note">* Required</string>
+    <string name="enquiry_submit">Send enquiry</string>
+    <string name="enquiry_error_required">This field is required.</string>
+    <string name="enquiry_error_email">Enter a valid email address, like name@example.com.</string>
+    <string name="enquiry_error_phone">Enter a valid phone number.</string>
+    <string name="enquiry_error_too_long">This is too long.</string>
+    <string name="enquiry_thank_you_title">Thank you</string>
+    <string name="enquiry_thank_you_body">We\'ve received your enquiry about %1$s. Our sales team will be in touch soon.</string>
+    <string name="enquiry_continue">Continue browsing</string>
+    <plurals name="search_results_count">
+        <item quantity="one">%1$d result for \"%2$s\"</item>
+        <item quantity="other">%1$d results for \"%2$s\"</item>
+    </plurals>
 </resources>

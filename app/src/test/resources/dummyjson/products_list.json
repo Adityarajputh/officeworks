@@ -1,0 +1,26 @@
+{
+  "products": [
+    {
+      "id": 130,
+      "title": " Realme XT ",
+      "description": "The Realme XT is a feature-rich smartphone.",
+      "category": "smartphones",
+      "price": 349.99,
+      "rating": 4.58,
+      "brand": "Realme",
+      "thumbnail": "https://cdn.dummyjson.com/realme-xt/thumbnail.webp",
+      "images": ["https://cdn.dummyjson.com/realme-xt/1.webp", "https://cdn.dummyjson.com/realme-xt/2.webp"],
+      "availabilityStatus": "In Stock",
+      "reviews": [{ "rating": 5, "comment": "Fields we do not model must be ignored" }],
+      "someFieldAddedLater": true
+    },
+    {
+      "id": 131,
+      "title": "Oppo Reno",
+      "price": 9.99
+    }
+  ],
+  "total": 2,
+  "skip": 0,
+  "limit": 0
+}
