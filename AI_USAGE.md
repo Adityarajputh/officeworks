@@ -60,24 +60,22 @@ I planned before building, in a shared doc. The main points:
 | Called `stringResource()` inside `LazyVerticalGrid`'s item builder in three screens. That lambda isn't composable, so this doesn't compile. | Compiler | Read the strings before building the grid |
 | Read navigation arguments in ViewModels with `SavedStateHandle.toRoute()`, which needs `android.os.Bundle`. | 16 of 50 JVM tests failed with "Method putCharSequence in android.os.Bundle not mocked" | Each ViewModel now takes its typed route through Hilt assisted injection. No Robolectric needed, and the ViewModels are simpler. Added a rule to CLAUDE.md so it doesn't come back. |
 | Set brand colours for primary/secondary only, so cards and image placeholders fell back to Material's default purple tones, which conflicts with the "look and feel in one place" goal. | A screenshot of the running app on the emulator | Added neutral surface tokens to the theme |
-| (False alarm) An "app not responding" dialog appeared while scrolling the home screen on the emulator. | Logcat | Checked before calling it a bug. The emulator was overloaded: Play Store updates compiling in the background, load average around 30 on 4 cores, bytecode verification at 82 bytecodes/s. No app code was on the slow path. Needs re-checking on a quiet emulator. |
+| (Unconfirmed) An "app not responding" dialog appeared while scrolling the home screen on the emulator. | Logcat and emulator load | Not treated as fixed. The thread dump couldn't be read (permission denied on the Play Store system image), so the cause is inferred, not proven. The emulator was heavily loaded at the time: Play Store updates compiling in the background (`dex2oat`), load average around 30 on 4 cores, bytecode verification at 82 bytecodes/s. Re-checked on a quiet emulator: see "How I reviewed the output". |
 
-<!-- TODO (Aditya): add what you found and changed in your own review, e.g.
-| Something you questioned or changed | How you noticed | What you did |
--->
+| **TODO (Aditya):** anything you questioned or changed in your own review | How you noticed | What you did |
 
 ## How I reviewed the output
 
-<!-- TODO (Aditya): fill in honestly before submitting. Suggested points:
+**TODO (Aditya):** fill this in honestly before submitting. Suggested points:
+
 - Read every file in the PR diff. Note anything you changed or asked the agent to change.
-- Ran the app on the emulator and walked through all five acceptance criteria.
-- Ran ./gradlew :app:testDebugUnitTest and :app:connectedDebugAndroidTest.
+- Ran the app on the emulator and walked through all five acceptance criteria. Did the scroll ANR come back on a quiet emulator?
+- Ran `./gradlew :app:testDebugUnitTest` and `./gradlew :app:connectedDebugAndroidTest`.
 - Decisions you would defend differently from the AI, if any.
--->
 
 ## Time spent
 
-<!-- TODO (Aditya): replace with your real numbers. -->
+**TODO (Aditya):** replace with your real numbers.
 
 | Phase | Time |
 |---|---|

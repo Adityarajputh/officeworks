@@ -62,7 +62,7 @@ reasonable reading and moved on.
 
 | What | Why |
 |---|---|
-| **No backend in the repo**, so the app calls DummyJSON directly | The brief's rule is "all product data must go through your backend". For this Android submission the recruiter swapped the backend for DummyJSON. I kept the boundary instead: one repository interface and a configurable base URL. *Verbal waivers are easy to forget: confirm it in writing on the recruiter's email thread.* |
+| **No backend in the repo**, so the app calls DummyJSON directly | The brief's rule is "all product data must go through your backend". For this Android submission the recruiter swapped the backend for DummyJSON. I kept the boundary instead: one repository interface and a configurable base URL. |
 | **No real email is sent** | A mobile app can't send email safely: provider credentials would ship inside the APK, where anyone can extract them. DummyJSON has no email endpoint. `DummyJsonEnquiryGateway` makes a real `POST /posts/add` (DummyJSON answers like a real create call and stores nothing), so the flow has real network failure modes the UI must handle. Production needs a backend endpoint that sends the email; only the gateway binding changes in the app. **This stand-in sends the form contents to a public test API, so demos should use made-up contact details.** |
 | No paging | The DummyJSON catalogue is ~200 products and a category is under 20. Search asks for all matches. Paging 3 is the next step with a real catalogue. |
 | No offline cache | The PoC needs a connection. Errors are handled and retryable. |

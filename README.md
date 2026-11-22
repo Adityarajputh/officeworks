@@ -31,7 +31,7 @@ DummyJSON has search, categories and a `rating` field to sort by.
 
 ### Requirements
 
-- Android Studio with Android Gradle Plugin 9.2 support (any 2026 release).
+- Android Studio 2026.1 or newer (built and tested with 2026.1; the project uses Android Gradle Plugin 9.2).
 - Android SDK Platform 37 (Android Studio offers to install it on first sync).
 - An Android Emulator, API 24 or newer. The UI tests were run on a Pixel 9 / API 36 emulator.
 - Internet access (the app loads products from dummyjson.com).
@@ -48,7 +48,9 @@ You don't need a JDK of your own. Gradle downloads JDK 21 for its daemon if need
 
 ### Command line
 
-With an emulator already running:
+Gradle needs to know where the Android SDK is. Either open the project once in Android Studio
+(it writes `local.properties`), or set `ANDROID_HOME`, for example
+`export ANDROID_HOME=$HOME/Library/Android/sdk` on macOS. Then, with an emulator already running:
 
 ```bash
 ./gradlew :app:installDebug
