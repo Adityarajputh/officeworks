@@ -28,10 +28,17 @@ the look and feel and the email provider to change, so the code is built around 
   repository interface -> data implementation.
 - Every network call goes through `safeApiCall` and returns `DataResult`. Nothing below the
   ViewModel throws for expected failures.
-- MVI per screen: `XContract.kt` holds `XState` (immutable data class), `XIntent` (sealed) and,
-  only if needed, `XEffect` for one-off events. The ViewModel extends `MviViewModel` and is the
-  only thing that changes state. Composables are split into `XRoute` (gets the ViewModel) and
-  `XScreen` (stateless, takes state and an `onIntent` lambda).
+- MVI per screen: `XContract.kt` holds `XState` (immutable data class) and `XIntent` (sealed).
+  The ViewModel extends `MviViewModel` and is the only thing that changes state. Composables are
+  split into `XRoute` (gets the ViewModel) and `XScreen` (stateless, takes state and an `onIntent`
+  lambda).
+- Things the UI shows once (a snackbar) are state, not events: a nullable field in `XState`
+  plus an `XIntent.…Shown` intent the screen sends after showing it, inside
+  `repeatOnLifecycle(STARTED)`. No `Channel` or `SharedFlow` events: they can be consumed and
+  lost on rotation or in the background. See `EnquiryState.submitError`.
+- Errors: screens use `ErrorView` (message plus retry, no retry for `NOT_FOUND`), `LoadingView`
+  and `MessageView` from `core/ui`. Product images go through `ProductImage`, which shows a
+  placeholder when an image is missing or fails to load.
 - ViewModels that need navigation arguments get the typed `Destination` through Hilt assisted
   injection (`@AssistedInject` plus a `Factory`). Do not use `SavedStateHandle.toRoute()` in a
   ViewModel: it needs `android.os.Bundle` and breaks JVM unit tests.
@@ -54,6 +61,7 @@ the look and feel and the email provider to change, so the code is built around 
 - Never send email from the app or add email-provider keys, API keys or any secret to the repo or
   the APK. Enquiries must go through a backend in production.
 - Never log request or response bodies: enquiries contain the customer's name, email and phone number.
+  Log through Timber only (`safeApiCall` already logs failure causes); never `android.util.Log`.
 - Never allow cleartext HTTP.
 - Never commit `local.properties`.
 

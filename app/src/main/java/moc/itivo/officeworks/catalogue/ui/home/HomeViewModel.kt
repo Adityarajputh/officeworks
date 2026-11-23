@@ -16,7 +16,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val featuredProducts: FeaturedProductsProvider,
     private val repository: ProductRepository,
-) : MviViewModel<HomeState, HomeIntent, Nothing>(HomeState()) {
+) : MviViewModel<HomeState, HomeIntent>(HomeState()) {
 
     private var loadJob: Job? = null
 

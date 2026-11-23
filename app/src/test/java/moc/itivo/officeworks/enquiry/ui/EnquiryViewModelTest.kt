@@ -1,8 +1,6 @@
 package moc.itivo.officeworks.enquiry.ui
 
-import app.cash.turbine.test
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.test.runTest
 import moc.itivo.officeworks.core.result.DataError
 import moc.itivo.officeworks.core.result.DataResult
 import moc.itivo.officeworks.enquiry.FakeEnquiryGateway
@@ -74,18 +72,35 @@ class EnquiryViewModelTest {
     }
 
     @Test
-    fun `a failed send keeps the form and tells the customer`() = runTest {
+    fun `a failed send keeps the form and holds the error until it has been shown`() {
         gateway.result = DataResult.Failure(DataError.NETWORK)
         fillValidForm()
 
-        viewModel.effects.test {
-            viewModel.onIntent(EnquiryIntent.Submit)
-            assertEquals(EnquiryEffect.SubmitFailed(DataError.NETWORK), awaitItem())
-        }
+        viewModel.onIntent(EnquiryIntent.Submit)
+
         val state = viewModel.state.value
+        assertEquals(DataError.NETWORK, state.submitError)
         assertFalse(state.isSent)
         assertFalse(state.isSubmitting)
         assertEquals("Sam Lee", state.form.name)
+
+        viewModel.onIntent(EnquiryIntent.SubmitErrorShown)
+        assertNull(viewModel.state.value.submitError)
+    }
+
+    @Test
+    fun `trying again clears the old error and can succeed`() {
+        gateway.result = DataResult.Failure(DataError.SERVER)
+        fillValidForm()
+        viewModel.onIntent(EnquiryIntent.Submit)
+        assertEquals(DataError.SERVER, viewModel.state.value.submitError)
+
+        gateway.result = DataResult.Success(Unit)
+        viewModel.onIntent(EnquiryIntent.Submit)
+
+        assertNull(viewModel.state.value.submitError)
+        assertTrue(viewModel.state.value.isSent)
+        assertEquals(2, gateway.sent.size)
     }
 
     @Test

@@ -14,6 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import moc.itivo.officeworks.R
@@ -48,6 +51,8 @@ fun ErrorView(error: DataError, onRetry: () -> Unit, modifier: Modifier = Modifi
             text = stringResource(error.messageRes()),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
+            // The error replaces the content without focus moving, so ask TalkBack to read it out.
+            modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
         )
         if (error != DataError.NOT_FOUND) {
             Button(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }

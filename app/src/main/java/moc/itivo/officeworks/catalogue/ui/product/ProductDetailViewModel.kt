@@ -20,7 +20,7 @@ import moc.itivo.officeworks.navigation.Destination
 class ProductDetailViewModel @AssistedInject constructor(
     @Assisted private val route: Destination.Product,
     private val repository: ProductRepository,
-) : MviViewModel<ProductDetailState, ProductDetailIntent, Nothing>(ProductDetailState()) {
+) : MviViewModel<ProductDetailState, ProductDetailIntent>(ProductDetailState()) {
 
     @AssistedFactory
     interface Factory {

@@ -31,6 +31,7 @@
     <string name="product_rating">Rated %1$s out of 5</string>
     <string name="product_enquire">Enquire</string>
     <string name="product_image_description">Image %1$d of %2$s</string>
+    <string name="image_unavailable">Image unavailable</string>
 
     <!-- Enquiry -->
     <string name="enquiry_title">Enquire</string>

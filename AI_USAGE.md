@@ -62,7 +62,8 @@ I planned before building, in a shared doc. The main points:
 | Set brand colours for primary/secondary only, so cards and image placeholders fell back to Material's default purple tones, which conflicts with the "look and feel in one place" goal. | A screenshot of the running app on the emulator | Added neutral surface tokens to the theme |
 | (Unconfirmed) An "app not responding" dialog appeared while scrolling the home screen on the emulator. | Logcat and emulator load | Not treated as fixed. The thread dump couldn't be read (permission denied on the Play Store system image), so the cause is inferred, not proven. The emulator was heavily loaded at the time: Play Store updates compiling in the background (`dex2oat`), load average around 30 on 4 cores, bytecode verification at 82 bytecodes/s. Re-checked on a quiet emulator: see "How I reviewed the output". |
 
-| **TODO (Aditya):** anything you questioned or changed in your own review | How you noticed | What you did |
+| Sent the "enquiry failed" message through a one-off `Channel` event, collected with a plain `LaunchedEffect`. If the phone rotated during the snackbar, or the app was in the background, the message could be consumed and lost. | I asked for a review of UI state, error state and error screens against Android standards | Made it state (`submitError`) plus a `SubmitErrorShown` intent, shown only while the app is in the foreground. Removed the event channel from the base ViewModel. The same review added debug logging of failure causes, an image-failure placeholder and a screen-reader announcement for errors. |
+| **TODO (Aditya):** anything else you questioned or changed in your own review | How you noticed | What you did |
 
 ## How I reviewed the output
 

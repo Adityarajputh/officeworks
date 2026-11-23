@@ -20,7 +20,7 @@ import moc.itivo.officeworks.navigation.Destination
 class SearchViewModel @AssistedInject constructor(
     @Assisted route: Destination.Search,
     private val repository: ProductRepository,
-) : MviViewModel<SearchState, SearchIntent, Nothing>(SearchState(query = route.query)) {
+) : MviViewModel<SearchState, SearchIntent>(SearchState(query = route.query)) {
 
     @AssistedFactory
     interface Factory {

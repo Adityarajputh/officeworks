@@ -23,9 +23,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -36,8 +36,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moc.itivo.officeworks.R
+import moc.itivo.officeworks.core.result.DataError
 import moc.itivo.officeworks.core.ui.BackTopAppBar
 import moc.itivo.officeworks.core.ui.messageRes
 import moc.itivo.officeworks.enquiry.domain.FieldError
@@ -51,29 +55,19 @@ fun EnquiryRoute(
     viewModel: EnquiryViewModel = hiltViewModel<EnquiryViewModel, EnquiryViewModel.Factory> { it.create(route) },
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val resources = LocalResources.current
-
-    LaunchedEffect(viewModel, resources) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is EnquiryEffect.SubmitFailed ->
-                    snackbarHostState.showSnackbar(resources.getString(effect.error.messageRes()))
-            }
-        }
-    }
-
-    EnquiryScreen(state, viewModel::onIntent, snackbarHostState, onBack, onContinueBrowsing)
+    EnquiryScreen(state, viewModel::onIntent, onBack, onContinueBrowsing)
 }
 
 @Composable
 fun EnquiryScreen(
     state: EnquiryState,
     onIntent: (EnquiryIntent) -> Unit,
-    snackbarHostState: SnackbarHostState,
     onBack: () -> Unit,
     onContinueBrowsing: () -> Unit,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    SubmitErrorSnackbar(state.submitError, snackbarHostState, onShown = { onIntent(EnquiryIntent.SubmitErrorShown) })
+
     Scaffold(
         topBar = { BackTopAppBar(title = stringResource(R.string.enquiry_title), onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -85,6 +79,25 @@ fun EnquiryScreen(
             ThankYou(state.productTitle, onContinueBrowsing, modifier)
         } else {
             EnquiryFormContent(state, onIntent, modifier)
+        }
+    }
+}
+
+/**
+ * Shows [error] once, then reports it as shown. Showing only runs while the screen is at least
+ * STARTED: if the app goes to the background or rotates mid-snackbar, the error is still in the
+ * state and is shown again when the customer comes back, instead of being lost.
+ */
+@Composable
+private fun SubmitErrorSnackbar(error: DataError?, snackbarHostState: SnackbarHostState, onShown: () -> Unit) {
+    if (error == null) return
+    val message = stringResource(error.messageRes())
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val currentOnShown by rememberUpdatedState(onShown)
+    LaunchedEffect(error, message, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            snackbarHostState.showSnackbar(message)
+            currentOnShown()
         }
     }
 }
