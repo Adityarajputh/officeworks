@@ -10,6 +10,11 @@ data class EnquiryState(
     val errors: EnquiryValidation = EnquiryValidation(),
     val isSubmitting: Boolean = false,
     val isSent: Boolean = false,
+    /**
+     * Why the last send failed, shown once as a snackbar. The form keeps what the customer
+     * typed so they can try again. Cleared by [EnquiryIntent.SubmitErrorShown].
+     */
+    val submitError: DataError? = null,
 )
 
 sealed interface EnquiryIntent {
@@ -18,9 +23,7 @@ sealed interface EnquiryIntent {
     data class PhoneChanged(val value: String) : EnquiryIntent
     data class MessageChanged(val value: String) : EnquiryIntent
     data object Submit : EnquiryIntent
-}
 
-sealed interface EnquiryEffect {
-    /** Sending failed; the form keeps what the customer typed so they can retry. */
-    data class SubmitFailed(val error: DataError) : EnquiryEffect
+    /** The screen has shown [EnquiryState.submitError] to the customer. */
+    data object SubmitErrorShown : EnquiryIntent
 }

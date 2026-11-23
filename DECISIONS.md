@@ -15,8 +15,11 @@ Compose screen ──intent──▶ ViewModel (MVI) ──▶ use case / interf
   `di` and `ui` packages. Multi-module would be overkill for a 2–3 hour PoC, but the package
   boundaries are the future module boundaries (see "How it grows").
 - **MVI per screen.** Each screen has an immutable `State`, a sealed `Intent` and a ViewModel
-  that is the only thing allowed to change state. One-off events (a snackbar after a failed
-  send) go through an `Effect` channel so they are not replayed on rotation. This is pragmatic
+  that is the only thing allowed to change state. Something shown once, like the snackbar after
+  a failed send, is also state (`submitError`). The screen clears it with a `SubmitErrorShown`
+  intent after the snackbar has been shown, and only shows it while the app is in the
+  foreground. This follows Android's guidance on ViewModel events: a one-off event sent through a
+  channel can be consumed and lost on rotation or in the background. This is pragmatic
   MVI: state changes are `setState { copy(...) }` calls inside the ViewModel, not a separate
   pure reducer function. That keeps 5 small screens readable. A reducer can be pulled out if a
   screen's logic grows.
@@ -29,7 +32,10 @@ Compose screen ──intent──▶ ViewModel (MVI) ──▶ use case / interf
 - **Errors are values.** Every network call goes through `safeApiCall`, which turns exceptions
   into a `DataResult` with a `DataError` (`NETWORK`, `NOT_FOUND`, `SERVER`, `UNEXPECTED`).
   Cancellation is rethrown. Each screen shows a message and a retry button, except for
-  `NOT_FOUND`, where retrying cannot help.
+  `NOT_FOUND`, where retrying cannot help. The message is announced by screen readers when it
+  appears. The real cause is logged with Timber (Logcat in debug builds only), because a
+  `DataError` alone can't tell you why something failed. Images that fail to load show a
+  "broken image" placeholder instead of an empty box.
 
 ## Swap points for what the client said will change
 

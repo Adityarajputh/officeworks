@@ -15,7 +15,7 @@ import moc.itivo.officeworks.navigation.Destination
 class EnquiryViewModel @AssistedInject constructor(
     @Assisted private val route: Destination.Enquiry,
     private val submitEnquiry: SubmitEnquiryUseCase,
-) : MviViewModel<EnquiryState, EnquiryIntent, EnquiryEffect>(EnquiryState(productTitle = route.productTitle)) {
+) : MviViewModel<EnquiryState, EnquiryIntent>(EnquiryState(productTitle = route.productTitle)) {
 
     @AssistedFactory
     interface Factory {
@@ -38,20 +38,18 @@ class EnquiryViewModel @AssistedInject constructor(
                 copy(form = form.copy(message = intent.value), errors = errors.copy(message = null))
             }
             EnquiryIntent.Submit -> submit()
+            EnquiryIntent.SubmitErrorShown -> setState { copy(submitError = null) }
         }
     }
 
     private fun submit() {
         if (currentState.isSubmitting || currentState.isSent) return // No double sends.
-        setState { copy(isSubmitting = true) }
+        setState { copy(isSubmitting = true, submitError = null) }
         viewModelScope.launch {
             when (val result = submitEnquiry(route.productId, route.productTitle, currentState.form)) {
                 SubmitEnquiryResult.Sent -> setState { copy(isSubmitting = false, isSent = true) }
                 is SubmitEnquiryResult.Invalid -> setState { copy(isSubmitting = false, errors = result.validation) }
-                is SubmitEnquiryResult.Failed -> {
-                    setState { copy(isSubmitting = false) }
-                    sendEffect(EnquiryEffect.SubmitFailed(result.error))
-                }
+                is SubmitEnquiryResult.Failed -> setState { copy(isSubmitting = false, submitError = result.error) }
             }
         }
     }

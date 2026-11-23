@@ -1,6 +1,5 @@
 package moc.itivo.officeworks.catalogue.ui.product
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,15 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import moc.itivo.officeworks.R
 import moc.itivo.officeworks.catalogue.domain.model.Product
+import moc.itivo.officeworks.catalogue.ui.components.ProductImage
 import moc.itivo.officeworks.catalogue.ui.components.RatingRow
 import moc.itivo.officeworks.catalogue.ui.components.formatPrice
 import moc.itivo.officeworks.core.ui.BackTopAppBar
@@ -94,24 +92,23 @@ private fun ProductDetails(product: Product, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item(key = "images") {
-            val images = product.imageUrls.ifEmpty { listOfNotNull(product.thumbnailUrl) }
+            // No images at all still shows one "image unavailable" placeholder.
+            val images: List<String?> = product.imageUrls.ifEmpty { listOf(product.thumbnailUrl) }
             LazyRow(
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 itemsIndexed(images) { index, url ->
-                    AsyncImage(
-                        model = url,
+                    ProductImage(
+                        url = url,
                         contentDescription = stringResource(
                             R.string.product_image_description,
                             index + 1,
                             product.title,
                         ),
-                        contentScale = ContentScale.Fit,
                         modifier = Modifier
                             .size(280.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(MaterialTheme.colorScheme.surfaceVariant),
+                            .clip(RoundedCornerShape(12.dp)),
                     )
                 }
             }

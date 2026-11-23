@@ -16,7 +16,7 @@ import moc.itivo.officeworks.navigation.Destination
 class CategoryViewModel @AssistedInject constructor(
     @Assisted private val route: Destination.Category,
     private val getCategoryProducts: GetCategoryProductsUseCase,
-) : MviViewModel<CategoryState, CategoryIntent, Nothing>(CategoryState(categoryName = route.name)) {
+) : MviViewModel<CategoryState, CategoryIntent>(CategoryState(categoryName = route.name)) {
 
     @AssistedFactory
     interface Factory {
