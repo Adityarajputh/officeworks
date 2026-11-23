@@ -43,14 +43,12 @@ class EnquiryFlowTest {
     }
 
     private fun launch(gateway: EnquiryGateway) {
-        val viewModel = EnquiryViewModel(
-            Destination.Enquiry(productId = 7, productTitle = "Desk Lamp"),
-            SubmitEnquiryUseCase(EnquiryValidator(), gateway),
-        )
+        val route = Destination.Enquiry(productId = 7, productTitle = "Desk Lamp")
+        val viewModel = EnquiryViewModel(route, SubmitEnquiryUseCase(EnquiryValidator(), gateway))
         composeRule.setContent {
             OfficeworksTheme {
                 EnquiryRoute(
-                    route = Destination.Enquiry(productId = 7, productTitle = "Desk Lamp"),
+                    route = route,
                     onBack = {},
                     onContinueBrowsing = {},
                     viewModel = viewModel,

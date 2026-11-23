@@ -23,7 +23,7 @@ class TopRatedFeaturedProductsProvider @Inject constructor(
     override suspend fun getFeaturedProducts(): DataResult<List<Product>> =
         repository.getTopRatedProducts(limit = FEATURED_COUNT)
 
-    companion object {
+    private companion object {
         const val FEATURED_COUNT = 5
     }
 }

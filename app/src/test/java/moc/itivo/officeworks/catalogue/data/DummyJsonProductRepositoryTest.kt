@@ -3,19 +3,15 @@ package moc.itivo.officeworks.catalogue.data
 import kotlinx.coroutines.test.runTest
 import mockwebserver3.MockResponse
 import mockwebserver3.MockWebServer
-import moc.itivo.officeworks.catalogue.data.remote.DummyJsonProductApi
-import moc.itivo.officeworks.core.network.NetworkModule
 import moc.itivo.officeworks.core.result.DataError
 import moc.itivo.officeworks.core.result.DataResult
-import okhttp3.MediaType.Companion.toMediaType
+import moc.itivo.officeworks.testutil.createApi
+import moc.itivo.officeworks.testutil.jsonResponse
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import retrofit2.create
 
 /**
  * Exercises the real Retrofit + kotlinx.serialization stack against a local server, so the
@@ -29,12 +25,7 @@ class DummyJsonProductRepositoryTest {
     @Before
     fun setUp() {
         server.start()
-        val api = Retrofit.Builder()
-            .baseUrl(server.url("/"))
-            .addConverterFactory(NetworkModule.provideJson().asConverterFactory("application/json".toMediaType()))
-            .build()
-            .create<DummyJsonProductApi>()
-        repository = DummyJsonProductRepository(api)
+        repository = DummyJsonProductRepository(server.createApi())
     }
 
     @After
@@ -44,7 +35,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `top rated asks the API to sort by rating, highest first`() = runTest {
-        server.enqueue(json(fixture("products_list.json")))
+        server.enqueue(jsonResponse(fixture("products_list.json")))
 
         val result = repository.getTopRatedProducts(limit = 5)
 
@@ -58,7 +49,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `search sends the term and asks for every match`() = runTest {
-        server.enqueue(json(fixture("products_list.json")))
+        server.enqueue(jsonResponse(fixture("products_list.json")))
 
         val result = repository.searchProducts("phone case")
 
@@ -71,7 +62,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `category slug goes in the path`() = runTest {
-        server.enqueue(json(fixture("products_list.json")))
+        server.enqueue(jsonResponse(fixture("products_list.json")))
 
         repository.getProductsInCategory("home-decoration")
 
@@ -80,7 +71,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `parses products, ignores unknown fields and fills defaults for missing ones`() = runTest {
-        server.enqueue(json(fixture("products_list.json")))
+        server.enqueue(jsonResponse(fixture("products_list.json")))
 
         val products = (repository.searchProducts("x") as DataResult.Success).data
 
@@ -95,7 +86,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `parses categories`() = runTest {
-        server.enqueue(json("""[{"slug":"beauty","name":"Beauty","url":"https://dummyjson.com/products/category/beauty"}]"""))
+        server.enqueue(jsonResponse("""[{"slug":"beauty","name":"Beauty","url":"https://dummyjson.com/products/category/beauty"}]"""))
 
         val categories = (repository.getCategories() as DataResult.Success).data
 
@@ -119,7 +110,7 @@ class DummyJsonProductRepositoryTest {
 
     @Test
     fun `malformed JSON becomes UNEXPECTED instead of crashing`() = runTest {
-        server.enqueue(json("""{"products": "not a list"}"""))
+        server.enqueue(jsonResponse("""{"products": "not a list"}"""))
 
         assertEquals(DataResult.Failure(DataError.UNEXPECTED), repository.searchProducts("x"))
     }
@@ -130,12 +121,6 @@ class DummyJsonProductRepositoryTest {
 
         assertEquals(DataResult.Failure(DataError.NETWORK), repository.getTopRatedProducts(5))
     }
-
-    private fun json(body: String) = MockResponse.Builder()
-        .code(200)
-        .addHeader("Content-Type", "application/json")
-        .body(body)
-        .build()
 
     private fun fixture(name: String): String =
         checkNotNull(javaClass.classLoader?.getResource("dummyjson/$name")) { "Missing fixture $name" }.readText()

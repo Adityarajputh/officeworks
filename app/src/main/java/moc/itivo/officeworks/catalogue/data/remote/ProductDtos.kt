@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductListDto(
     val products: List<ProductDto>,
-    val total: Int = 0,
 )
 
 @Serializable

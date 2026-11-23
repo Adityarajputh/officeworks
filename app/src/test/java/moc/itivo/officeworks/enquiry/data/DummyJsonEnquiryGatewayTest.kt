@@ -9,15 +9,13 @@ import moc.itivo.officeworks.core.network.NetworkModule
 import moc.itivo.officeworks.core.result.DataError
 import moc.itivo.officeworks.core.result.DataResult
 import moc.itivo.officeworks.enquiry.domain.Enquiry
-import okhttp3.MediaType.Companion.toMediaType
+import moc.itivo.officeworks.testutil.createApi
+import moc.itivo.officeworks.testutil.jsonResponse
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Test
-import retrofit2.Retrofit
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
-import retrofit2.create
 
 class DummyJsonEnquiryGatewayTest {
 
@@ -37,12 +35,7 @@ class DummyJsonEnquiryGatewayTest {
     @Before
     fun setUp() {
         server.start()
-        val api = Retrofit.Builder()
-            .baseUrl(server.url("/"))
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .build()
-            .create<DummyJsonEnquiryApi>()
-        gateway = DummyJsonEnquiryGateway(api)
+        gateway = DummyJsonEnquiryGateway(server.createApi(json))
     }
 
     @After
@@ -52,7 +45,7 @@ class DummyJsonEnquiryGatewayTest {
 
     @Test
     fun `posts the enquiry to the simulated endpoint`() = runTest {
-        server.enqueue(MockResponse.Builder().code(201).addHeader("Content-Type", "application/json").body("""{"id":252}""").build())
+        server.enqueue(jsonResponse("""{"id":252}""", code = 201))
 
         val result = gateway.submit(enquiry)
 

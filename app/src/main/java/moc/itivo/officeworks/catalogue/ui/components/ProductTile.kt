@@ -55,7 +55,8 @@ fun ProductTile(product: Product, onClick: () -> Unit, modifier: Modifier = Modi
 
 @Composable
 fun RatingRow(rating: Double, modifier: Modifier = Modifier) {
-    val description = stringResource(R.string.product_rating, formatRating(rating))
+    val ratingText = formatRating(rating)
+    val description = stringResource(R.string.product_rating, ratingText)
     Row(
         modifier = modifier.semantics(mergeDescendants = true) { contentDescription = description },
         verticalAlignment = Alignment.CenterVertically,
@@ -67,6 +68,6 @@ fun RatingRow(rating: Double, modifier: Modifier = Modifier) {
             tint = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.size(16.dp),
         )
-        Text(text = formatRating(rating), style = MaterialTheme.typography.labelMedium)
+        Text(text = ratingText, style = MaterialTheme.typography.labelMedium)
     }
 }

@@ -28,3 +28,5 @@ inline fun <T, R> DataResult<T>.map(transform: (T) -> R): DataResult<R> = when (
     is DataResult.Success -> DataResult.Success(transform(data))
     is DataResult.Failure -> this
 }
+
+fun DataResult<*>.errorOrNull(): DataError? = (this as? DataResult.Failure)?.error

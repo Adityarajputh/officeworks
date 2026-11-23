@@ -9,6 +9,7 @@ import moc.itivo.officeworks.catalogue.domain.FeaturedProductsProvider
 import moc.itivo.officeworks.catalogue.domain.ProductRepository
 import moc.itivo.officeworks.core.mvi.MviViewModel
 import moc.itivo.officeworks.core.result.DataResult
+import moc.itivo.officeworks.core.result.errorOrNull
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,14 +41,10 @@ class HomeViewModel @Inject constructor(
             val categories = categoriesCall.await()
 
             setState {
-                when {
-                    featured is DataResult.Failure -> copy(isLoading = false, error = featured.error)
-                    categories is DataResult.Failure -> copy(isLoading = false, error = categories.error)
-                    else -> copy(
-                        isLoading = false,
-                        featured = (featured as DataResult.Success).data,
-                        categories = (categories as DataResult.Success).data,
-                    )
+                if (featured is DataResult.Success && categories is DataResult.Success) {
+                    copy(isLoading = false, featured = featured.data, categories = categories.data)
+                } else {
+                    copy(isLoading = false, error = featured.errorOrNull() ?: categories.errorOrNull())
                 }
             }
         }

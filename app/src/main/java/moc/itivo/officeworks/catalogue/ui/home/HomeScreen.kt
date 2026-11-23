@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -27,8 +25,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moc.itivo.officeworks.R
 import moc.itivo.officeworks.catalogue.domain.model.Category
-import moc.itivo.officeworks.catalogue.ui.components.GridContentPadding
-import moc.itivo.officeworks.catalogue.ui.components.GridMinCellWidth
+import moc.itivo.officeworks.catalogue.ui.components.ProductGrid
 import moc.itivo.officeworks.catalogue.ui.components.ProductSearchBar
 import moc.itivo.officeworks.catalogue.ui.components.gridHeader
 import moc.itivo.officeworks.catalogue.ui.components.productTiles
@@ -79,12 +76,7 @@ fun HomeScreen(
             when {
                 state.isLoading -> LoadingView()
                 state.error != null -> ErrorView(state.error, onRetry = { onIntent(HomeIntent.Retry) })
-                else -> LazyVerticalGrid(
-                    columns = GridCells.Adaptive(GridMinCellWidth),
-                    contentPadding = GridContentPadding,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
+                else -> ProductGrid {
                     gridHeader(featuredTitle, key = "featured-header")
                     productTiles(state.featured, keyPrefix = "featured", onProductClick = onProductClick)
 

@@ -22,17 +22,13 @@ class FakeProductRepository : ProductRepository {
     val requestedCategories = mutableListOf<String>()
     val requestedProductIds = mutableListOf<Int>()
     val searchQueries = mutableListOf<String>()
-    var categoriesCalls = 0
 
     override suspend fun getTopRatedProducts(limit: Int): DataResult<List<Product>> {
         requestedTopRatedLimits += limit
         return topRatedResult
     }
 
-    override suspend fun getCategories(): DataResult<List<Category>> {
-        categoriesCalls++
-        return categoriesResult
-    }
+    override suspend fun getCategories(): DataResult<List<Category>> = categoriesResult
 
     override suspend fun getProductsInCategory(categorySlug: String): DataResult<List<Product>> {
         requestedCategories += categorySlug

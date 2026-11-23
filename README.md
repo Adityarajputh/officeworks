@@ -66,7 +66,7 @@ adb shell am start -n moc.itivo.officeworks/.MainActivity
 ./gradlew :app:testDebugUnitTest
 ```
 
-50 JVM tests: mappers, the DummyJSON repository against MockWebServer (paths, query
+51 JVM tests: mappers, the DummyJSON repository against MockWebServer (paths, query
 parameters, parsing, and error mapping for 404, 5xx, bad JSON and offline), the use cases,
 enquiry validation and every ViewModel.
 

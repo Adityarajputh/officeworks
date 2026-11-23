@@ -56,4 +56,12 @@ class HomeViewModelTest {
 
         assertEquals(DataError.SERVER, viewModel().state.value.error)
     }
+
+    @Test
+    fun `when both calls fail, the featured products error is shown`() {
+        repository.topRatedResult = DataResult.Failure(DataError.NETWORK)
+        repository.categoriesResult = DataResult.Failure(DataError.SERVER)
+
+        assertEquals(DataError.NETWORK, viewModel().state.value.error)
+    }
 }

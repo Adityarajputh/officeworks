@@ -1,7 +1,6 @@
 package moc.itivo.officeworks.catalogue.domain
 
 import moc.itivo.officeworks.catalogue.domain.model.CategoryProducts
-import moc.itivo.officeworks.catalogue.domain.model.Product
 import moc.itivo.officeworks.core.result.DataResult
 import moc.itivo.officeworks.core.result.map
 import javax.inject.Inject
@@ -16,17 +15,12 @@ class GetCategoryProductsUseCase @Inject constructor(
     private val repository: ProductRepository,
 ) {
     suspend operator fun invoke(categorySlug: String): DataResult<CategoryProducts> =
-        repository.getProductsInCategory(categorySlug).map { splitByRating(it) }
-
-    companion object {
-        const val TOP_RATED_COUNT = 3
-
-        fun splitByRating(products: List<Product>, topCount: Int = TOP_RATED_COUNT): CategoryProducts {
+        repository.getProductsInCategory(categorySlug).map { products ->
             val byRating = products.sortedByDescending { it.rating }
-            return CategoryProducts(
-                topRated = byRating.take(topCount),
-                others = byRating.drop(topCount),
-            )
+            CategoryProducts(topRated = byRating.take(TOP_RATED_COUNT), others = byRating.drop(TOP_RATED_COUNT))
         }
+
+    private companion object {
+        const val TOP_RATED_COUNT = 3
     }
 }

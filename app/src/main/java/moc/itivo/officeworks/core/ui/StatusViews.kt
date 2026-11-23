@@ -34,8 +34,9 @@ fun LoadingView(modifier: Modifier = Modifier) {
     }
 }
 
+/** Explains [error] and offers a retry, except for [DataError.NOT_FOUND] where retrying cannot help. */
 @Composable
-fun ErrorView(error: DataError, onRetry: (() -> Unit)?, modifier: Modifier = Modifier) {
+fun ErrorView(error: DataError, onRetry: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -48,8 +49,7 @@ fun ErrorView(error: DataError, onRetry: (() -> Unit)?, modifier: Modifier = Mod
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
         )
-        // Retrying a 404 cannot help, so callers pass null for it.
-        if (onRetry != null) {
+        if (error != DataError.NOT_FOUND) {
             Button(onClick = onRetry) { Text(stringResource(R.string.action_retry)) }
         }
     }

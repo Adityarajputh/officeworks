@@ -1,5 +1,6 @@
 package moc.itivo.officeworks.enquiry.ui
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -83,13 +84,13 @@ fun EnquiryScreen(
         if (state.isSent) {
             ThankYou(state.productTitle, onContinueBrowsing, modifier)
         } else {
-            EnquiryForm(state, onIntent, modifier)
+            EnquiryFormContent(state, onIntent, modifier)
         }
     }
 }
 
 @Composable
-private fun EnquiryForm(state: EnquiryState, onIntent: (EnquiryIntent) -> Unit, modifier: Modifier) {
+private fun EnquiryFormContent(state: EnquiryState, onIntent: (EnquiryIntent) -> Unit, modifier: Modifier) {
     val enabled = !state.isSubmitting
     Column(
         modifier = modifier
@@ -183,6 +184,7 @@ private fun FormField(
     )
 }
 
+@StringRes
 private fun FieldError.messageRes(): Int = when (this) {
     FieldError.REQUIRED -> R.string.enquiry_error_required
     FieldError.INVALID_EMAIL -> R.string.enquiry_error_email

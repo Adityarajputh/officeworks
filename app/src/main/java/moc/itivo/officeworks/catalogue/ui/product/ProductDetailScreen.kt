@@ -5,10 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -33,7 +32,6 @@ import moc.itivo.officeworks.R
 import moc.itivo.officeworks.catalogue.domain.model.Product
 import moc.itivo.officeworks.catalogue.ui.components.RatingRow
 import moc.itivo.officeworks.catalogue.ui.components.formatPrice
-import moc.itivo.officeworks.core.result.DataError
 import moc.itivo.officeworks.core.ui.BackTopAppBar
 import moc.itivo.officeworks.core.ui.ErrorView
 import moc.itivo.officeworks.core.ui.LoadingView
@@ -82,11 +80,7 @@ fun ProductDetailScreen(
         val modifier = Modifier.padding(padding)
         when {
             state.isLoading -> LoadingView(modifier)
-            state.error != null -> ErrorView(
-                error = state.error,
-                onRetry = { onIntent(ProductDetailIntent.Retry) }.takeIf { state.error != DataError.NOT_FOUND },
-                modifier = modifier,
-            )
+            state.error != null -> ErrorView(state.error, onRetry = { onIntent(ProductDetailIntent.Retry) }, modifier)
             product != null -> ProductDetails(product, modifier)
         }
     }
@@ -115,8 +109,7 @@ private fun ProductDetails(product: Product, modifier: Modifier = Modifier) {
                         ),
                         contentScale = ContentScale.Fit,
                         modifier = Modifier
-                            .width(280.dp)
-                            .height(280.dp)
+                            .size(280.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(MaterialTheme.colorScheme.surfaceVariant),
                     )

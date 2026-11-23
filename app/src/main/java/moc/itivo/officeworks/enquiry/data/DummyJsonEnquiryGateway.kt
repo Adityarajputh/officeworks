@@ -32,7 +32,6 @@ class DummyJsonEnquiryGateway @Inject constructor(
                 userId = SIMULATED_USER_ID,
             ),
         )
-        Unit
     }
 
     private companion object {
@@ -54,12 +53,10 @@ internal fun Enquiry.toEmailBody(): String = buildString {
 }.trimEnd()
 
 interface DummyJsonEnquiryApi {
+    /** The response (the "created" post) is ignored: a 2xx is all the stand-in needs. */
     @POST("posts/add")
-    suspend fun addPost(@Body post: SimulatedPostDto): SimulatedPostResponseDto
+    suspend fun addPost(@Body post: SimulatedPostDto)
 }
 
 @Serializable
 data class SimulatedPostDto(val title: String, val body: String, val userId: Int)
-
-@Serializable
-data class SimulatedPostResponseDto(val id: Int)

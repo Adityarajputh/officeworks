@@ -1,12 +1,9 @@
 package moc.itivo.officeworks.catalogue.ui.search
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -17,8 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import moc.itivo.officeworks.R
-import moc.itivo.officeworks.catalogue.ui.components.GridContentPadding
-import moc.itivo.officeworks.catalogue.ui.components.GridMinCellWidth
+import moc.itivo.officeworks.catalogue.ui.components.ProductGrid
 import moc.itivo.officeworks.catalogue.ui.components.ProductSearchBar
 import moc.itivo.officeworks.catalogue.ui.components.gridHeader
 import moc.itivo.officeworks.catalogue.ui.components.productTiles
@@ -65,12 +61,7 @@ fun SearchScreen(
                 else -> {
                     val count = state.results.size
                     val resultsTitle = pluralStringResource(R.plurals.search_results_count, count, count, submitted)
-                    LazyVerticalGrid(
-                        columns = GridCells.Adaptive(GridMinCellWidth),
-                        contentPadding = GridContentPadding,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
+                    ProductGrid {
                         gridHeader(resultsTitle, key = "results-header")
                         productTiles(state.results, keyPrefix = "result", onProductClick = onProductClick)
                     }
