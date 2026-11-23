@@ -7,7 +7,8 @@ enquiry.
 - **Client:** Android app in Kotlin with Jetpack Compose (MVI, Hilt, Retrofit, Coil).
 - **Product data:** [DummyJSON](https://dummyjson.com/docs/products), a free public API that needs no account or key.
 
-Design decisions, assumptions and cuts are in [DECISIONS.md](DECISIONS.md).
+Design decisions, assumptions and cuts are in [DECISIONS.md](DECISIONS.md). How AI was used is in
+[AI_USAGE.md](AI_USAGE.md).
 
 ## Why this stack, and the one deviation from the brief
 
